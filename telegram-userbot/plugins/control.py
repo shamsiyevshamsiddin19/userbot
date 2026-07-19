@@ -5,37 +5,55 @@ Buyruqlar:
   .bot on         — ishchi rejim: avto-javob + avto-o'qish YOQILADI
   .bot off        — hamma rejim O'CHADI
   .bot autoreply  — avto-javobni yoqib/o'chiradi (toggle)
-  .bot autoread   — avto-o'qishni yoqib/o'chiradi
+  .bot autoread   — avto-o'qishni (hammasi) yoqib/o'chiradi
   .bot autoai     — yarim-avtomatik taklifni yoqib/o'chiradi
 """
 from . import _state as state
 from . import autoai, autoread, autoreply
 from ._helpers import command, register_all
 
-# nom -> (modul, ko'rinadigan nom)
-FEATURES = {
-    "autoreply": (autoreply, "🤖 Avto-javob"),
-    "autoread": (autoread, "👁 Avto-o'qish"),
-    "autoai": (autoai, "📝 Yarim-avto taklif"),
+LABELS = {
+    "autoreply": "🤖 Avto-javob",
+    "autoread": "👁 Avto-o'qish",
+    "autoai": "📝 Yarim-avto taklif",
 }
 
 
+def _get(name):
+    if name == "autoreply":
+        return autoreply.STATE.get("enabled")
+    if name == "autoai":
+        return autoai.STATE.get("enabled")
+    if name == "autoread":
+        return bool(autoread.KINDS)
+    return False
+
+
 def _set(name, value):
-    mod, _ = FEATURES[name]
-    mod.STATE["enabled"] = value
-    state.set(name, value)
-    # autoai o'chganda kutayotgan takliflarni tozalaymiz
-    if name == "autoai" and not value:
-        getattr(mod, "PENDING", {}).clear()
+    if name == "autoreply":
+        autoreply.STATE["enabled"] = value
+        state.set("autoreply", value)
+    elif name == "autoai":
+        autoai.STATE["enabled"] = value
+        state.set("autoai", value)
+        if not value:
+            autoai.PENDING.clear()
+    elif name == "autoread":
+        if value:
+            autoread.KINDS.update(autoread.ALL_KINDS)
+        else:
+            autoread.KINDS.clear()
+        autoread._persist()
 
 
 def _panel():
     lines = ["**🎛 Boshqaruv paneli**\n"]
-    for name, (mod, label) in FEATURES.items():
-        on = mod.STATE.get("enabled")
+    for name, label in LABELS.items():
+        on = _get(name)
         lines.append(f"{'🟢' if on else '⚪️'} {label} — `{name}`")
     lines.append("\n`.bot on` — ishchi rejim  |  `.bot off` — hammasi o‘chadi")
     lines.append("`.bot <nom>` — bittasini yoqib/o‘chirish")
+    lines.append("Kanal/guruh/botni alohida: `.autoread channels` va h.k.")
     return "\n".join(lines)
 
 
@@ -47,15 +65,14 @@ async def bot_cmd(event):
         _set("autoread", True)
         await event.edit("🟢 **Ishchi rejim YOQILDI** (avto-javob + avto-o'qish)\n\n" + _panel())
     elif arg == "off":
-        for name in FEATURES:
+        for name in LABELS:
             _set(name, False)
         await event.edit("⛔ **Hamma rejim O'CHIRILDI**\n\n" + _panel())
-    elif arg in FEATURES:
-        _, label = FEATURES[arg]
-        new_value = not FEATURES[arg][0].STATE.get("enabled")
+    elif arg in LABELS:
+        new_value = not _get(arg)
         _set(arg, new_value)
         holat = "🟢 yoqildi" if new_value else "⚪️ o‘chirildi"
-        await event.edit(f"{label}: {holat}\n\n" + _panel())
+        await event.edit(f"{LABELS[arg]}: {holat}\n\n" + _panel())
     else:
         await event.edit(_panel())
 
