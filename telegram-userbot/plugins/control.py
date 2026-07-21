@@ -8,9 +8,17 @@ Buyruqlar:
   .bot autoread   — avto-o'qishni (hammasi) yoqib/o'chiradi
   .bot autoai     — yarim-avtomatik taklifni yoqib/o'chiradi
 """
+import config
+
 from . import _state as state
 from . import autoai, autodraft, autoread, autoreply
 from ._helpers import command, register_all
+
+
+def _panel_link():
+    if config.PANEL_URL and config.PANEL_TOKEN:
+        return f"{config.PANEL_URL}/?token={config.PANEL_TOKEN}"
+    return None
 
 LABELS = {
     "autoreply": "🤖 Avto-javob",
@@ -52,14 +60,16 @@ def _set(name, value):
         autoread._persist()
 
 
-def _panel():
-    lines = ["**🎛 Boshqaruv paneli**\n"]
+def _panel(with_link=True):
+    lines = []
+    link = _panel_link()
+    if with_link and link:
+        lines.append(f"🌐 **Sozlash paneli:**\n{link}\n")
+    lines.append("**🎛 Rejimlar**")
     for name, label in LABELS.items():
         on = _get(name)
         lines.append(f"{'🟢' if on else '⚪️'} {label} — `{name}`")
     lines.append("\n`.bot on` — ishchi rejim  |  `.bot off` — hammasi o‘chadi")
-    lines.append("`.bot <nom>` — bittasini yoqib/o‘chirish")
-    lines.append("Kanal/guruh/botni alohida: `.autoread channels` va h.k.")
     return "\n".join(lines)
 
 

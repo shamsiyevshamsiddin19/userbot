@@ -55,6 +55,11 @@ GLOBAL_MAX = int(os.getenv("GLOBAL_MAX", "15"))
 HUMAN_DELAY_MIN = float(os.getenv("HUMAN_DELAY_MIN", "2"))
 HUMAN_DELAY_MAX = float(os.getenv("HUMAN_DELAY_MAX", "5"))
 
+# --- Web boshqaruv paneli ---
+PANEL_URL = os.getenv("PANEL_URL", "")      # masalan http://178.104.25.218:8080
+PANEL_TOKEN = os.getenv("PANEL_TOKEN", "")  # maxfiy kalit
+PANEL_PORT = int(os.getenv("PANEL_PORT", "8080"))
+
 if not API_ID or not API_HASH:
     raise SystemExit(
         f"[{SESSION}] API_ID/API_HASH sozlanmagan. .env faylini to'ldiring "
