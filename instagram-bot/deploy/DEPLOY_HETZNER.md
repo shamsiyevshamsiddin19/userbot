@@ -20,7 +20,7 @@ Quyida to'liq, qadamma-qadam yo'riqnoma.
 Kompyuteringizdan (PowerShell), bot papkasidan:
 
 ```powershell
-scp -r E:\instagram-gemini-bot root@SERVER_IP:/opt/instagram-gemini-bot
+scp -r E:\instagram-bot root@SERVER_IP:/opt/instagram-bot
 ```
 
 Yoki serverда git bilan tortib oling (agar GitHub'ga qo'ygan bo'lsangiz).
@@ -32,7 +32,7 @@ Yoki serverда git bilan tortib oling (agar GitHub'ga qo'ygan bo'lsangiz).
 ```bash
 ssh root@SERVER_IP
 
-cd /opt/instagram-gemini-bot
+cd /opt/instagram-bot
 apt update && apt install -y python3-venv python3-pip nginx
 
 python3 -m venv venv
@@ -101,7 +101,7 @@ Meta "Verified" desa — bot ishga tushdi! 🎉
 ```bash
 # Bot ishlayaptimi
 curl https://shamsbot.duckdns.org/
-# -> "Instagram Gemini bot ishlayapti"
+# -> "Instagram bot ishlayapti"
 
 # Jonli loglar (kim yozdi, qanday javob berildi)
 journalctl -u instagram-bot -f

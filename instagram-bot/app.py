@@ -1,5 +1,5 @@
 """
-Instagram + Gemini aqlli bot — webhook server.
+Instagram aqlli bot — webhook server.
 
 Ishga tushirish:
     python app.py
@@ -117,7 +117,7 @@ def _handle_comment(value: dict):
 
 @app.get("/")
 def home():
-    return "Instagram Gemini bot ishlayapti ✅", 200
+    return "Instagram bot ishlayapti ✅", 200
 
 
 if __name__ == "__main__":

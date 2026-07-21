@@ -1,4 +1,4 @@
-# Instagram + Gemini aqlli bot 🤖
+# Instagram aqlli bot 🤖
 
 Instagram akkauntingizga kelgan **DM**, **story mention** va **post izohlariga**
 Google Gemini yordamida avtomatik, aqlli javob beradigan bot.
@@ -26,7 +26,7 @@ Facebook sahifasi bo'lmasa — Instagram sozlamalaridan bepul yaratsangiz bo'lad
 - Terminalda loyiha papkasiga kiring:
 
 ```bash
-cd E:\instagram-gemini-bot
+cd E:\instagram-bot
 pip install -r requirements.txt
 ```
 
