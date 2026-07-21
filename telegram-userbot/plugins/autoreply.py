@@ -95,7 +95,12 @@ async def _on_incoming(event):
 
     # Shaxsiy — har doim; guruh — faqat mention/reply bo'lsa
     if event.is_private:
-        pass
+        # Qoralama rejimi yoqiq bo'lsa, shaxsiyga avto-javob bermaymiz
+        # (draft tayyorlanadi, ikki marta ishlamasin)
+        from . import autodraft
+        if autodraft.STATE.get("enabled"):
+            _dbg("skip: shaxsiy (autodraft ishlayapti)")
+            return
     elif event.is_group and event.mentioned:
         pass
     else:

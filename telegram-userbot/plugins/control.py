@@ -9,11 +9,12 @@ Buyruqlar:
   .bot autoai     — yarim-avtomatik taklifni yoqib/o'chiradi
 """
 from . import _state as state
-from . import autoai, autoread, autoreply
+from . import autoai, autodraft, autoread, autoreply
 from ._helpers import command, register_all
 
 LABELS = {
     "autoreply": "🤖 Avto-javob",
+    "autodraft": "✍️ Qoralama (shaxsiy)",
     "autoread": "👁 Avto-o'qish",
     "autoai": "📝 Yarim-avto taklif",
 }
@@ -22,6 +23,8 @@ LABELS = {
 def _get(name):
     if name == "autoreply":
         return autoreply.STATE.get("enabled")
+    if name == "autodraft":
+        return autodraft.STATE.get("enabled")
     if name == "autoai":
         return autoai.STATE.get("enabled")
     if name == "autoread":
@@ -33,6 +36,9 @@ def _set(name, value):
     if name == "autoreply":
         autoreply.STATE["enabled"] = value
         state.set("autoreply", value)
+    elif name == "autodraft":
+        autodraft.STATE["enabled"] = value
+        state.set("autodraft", value)
     elif name == "autoai":
         autoai.STATE["enabled"] = value
         state.set("autoai", value)
